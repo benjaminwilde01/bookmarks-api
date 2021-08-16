@@ -30,7 +30,8 @@ const CONNECTION_URL = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.D
 
 mongoose.connect(CONNECTION_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 });
 mongoose.connection.once('open', () => {
     console.log('connected to mongo')
