@@ -4,10 +4,14 @@ const mongoose = require('mongoose')
 const cors = require('cors');
 const PORT = 3003
 const dotenv = require('dotenv')
+const bodyParser = require('body-parser')
 dotenv.config()
 
 // middleware
 app.use(express.json());
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+app.use(cors())
 
 // confugure cors middleware for other requests
 var allowlist = ['http://localhost:3003']

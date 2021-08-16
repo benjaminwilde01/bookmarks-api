@@ -18,6 +18,7 @@ bookmarkRoute.post('/', (req, res) => {
             res.status(400).json({ error: err })
         }
         res.status(200).json(createdBookmark)
+        console.log(createdBookmark)
     })
 })
 
