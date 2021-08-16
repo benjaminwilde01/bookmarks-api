@@ -2,6 +2,7 @@ const express = require('express')
 const bookmarkRoute = express.Router()
 const Bookmark = require('../models/bookmark')
 
+
 bookmarkRoute.get('/', (req, res) => {
     Bookmark.find({}, (err, foundBookmark) => {
         if (err) {

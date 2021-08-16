@@ -10,18 +10,23 @@ dotenv.config()
 app.use(express.json());
 
 // confugure cors middleware for other requests
-const whitelist = ['http://localhost:3000']
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//       if (whitelist.indexOf(origin) !== -1) {
-//         callback(null, true)
-//       } else {
-//         callback(new Error('Not allowed by CORS'))
-//       }
-//     }
-//   }
+var allowlist = ['http://localhost:3003']
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
 
-// app.use(cors(corsOptions))
+app.options('*', cors()) // include before other routes
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     next();
+//   });
+  
 // SETUP OUR MONGO
 // Error / Disconnection
 const CONNECTION_URL = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.eirqz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
@@ -39,7 +44,7 @@ mongoose.connection.once('open', () => {
 
 // controllers
 const bookmarksController = require('./controllers/bookmarks')
-app.use('/bookmarks', bookmarksController)
+app.use('/bookmarks', cors(corsOptionsDelegate), bookmarksController)
 
 app.get('/', (req, res) => {
     res.redirect('/bookmarks')
